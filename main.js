@@ -101,6 +101,7 @@ function main(){
         setAlphabet(regCharPos);
         computeFollowPos(syntaxTree);
         computeDFAStates(syntaxTree);
+        printDFAStates();
     }
 }
 
@@ -115,7 +116,7 @@ function setAlphabet(inputArray){ //insert each distinct character of the alphab
 }
 
 function getInput(){
-    regexInput = $("#regexInput").val() 
+    regexInput = $("#regexInput").val();
 }
 
 function validateRegex(){ // TODO: check if () are correct
@@ -313,4 +314,23 @@ function computeDFAStates(root){
         currentState=queue.shift();
     }
 
+}
+
+function printDFAStates(){
+    output = $("#output");
+    var states = Object.keys(DSTATES);
+    var transitions = Object.keys(alphabet);
+    output.append("Initial State: [" + states[0] + "]<br>");
+    output.append("Accepting States: ");
+    states.forEach(function(element){
+        if (element.includes(counter)){
+            output.append("["+element+"] ");
+        }
+    });
+    output.append("<br> Transitions: <br>");
+    states.forEach(function(state){
+        transitions.forEach(function(transition){
+            output.append("𝛿( ["+state+"] , " + transition+" ) = ["+ DSTATES[state][transition].toString() + "]<br>");
+        });
+    });
 }
