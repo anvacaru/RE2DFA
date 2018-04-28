@@ -100,7 +100,7 @@ function main(){
         setAlphabet(regCharPos);
         computeFollowPos(syntaxTree);
         computeDFAStates(syntaxTree);
-        printDFAStates();
+        printDFAStates(syntaxTree);
     }
 }
 
