@@ -4,8 +4,7 @@ var TOKEN_TYPE = {
     STAR: '*',
     OR: '|',
     END: '#',
-    EMPTY: 'ε',
-    UNKNOWN: 'unknown',
+    EMPTY: 'e',
     REGCHAR: 'a-z',
     CONCAT: '+'
 };
@@ -20,7 +19,7 @@ function Token(type, text) {
     this.text = text;
 }
     
-var EMPTYTOKEN = new Token(TOKEN_TYPE.EMPTY, 'ε');
+var EMPTYTOKEN = new Token(TOKEN_TYPE.EMPTY, 'e');
 var CONCATTOKEN = new Token(TOKEN_TYPE.CONCAT, '+');
 var ENDTOKEN = new Token(TOKEN_TYPE.END,'#');
 
@@ -306,8 +305,10 @@ function computeDFAStates(root){
                     newState = newState.concat(followPos[element]);
                 }
             });
-            DSTATES[currentState][[distinctKeys[i]]] = newState;
-            if(false==stateExists(newState)){
+            if(newState.length!=0){
+                DSTATES[currentState][[distinctKeys[i]]] = newState;
+            }
+            if(false==stateExists(newState)&& newState.length!=0){
                 queue.push(newState);
             }
         }
@@ -316,11 +317,12 @@ function computeDFAStates(root){
 
 }
 
-function printDFAStates(){
+function printDFAStates(root){
     output = $("#output");
+    output.text("");
     var states = Object.keys(DSTATES);
     var transitions = Object.keys(alphabet);
-    output.append("Initial State: [" + states[0] + "]<br>");
+    output.append("Initial State: [" + root.firstPos + "]<br>");
     output.append("Accepting States: ");
     states.forEach(function(element){
         if (element.includes(counter)){
@@ -330,7 +332,9 @@ function printDFAStates(){
     output.append("<br> Transitions: <br>");
     states.forEach(function(state){
         transitions.forEach(function(transition){
-            output.append("𝛿( ["+state+"] , " + transition+" ) = ["+ DSTATES[state][transition].toString() + "]<br>");
+            if(DSTATES[state][transition]!=undefined){
+            output.append("d( ["+state+"] , " + transition+" ) = ["+ DSTATES[state][transition].toString() + "]<br>");
+            }
         });
     });
 }
